@@ -19,7 +19,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import com.example.pagingsample.data.MyItem
-import com.example.pagingsample.paging.MyPagingRepository
 import com.example.pagingsample.ui.theme.PagingSampleTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,7 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val viewModel = MyViewModel(MyPagingRepository(Repository()))
+            val viewModel = MyViewModel(MyDataSource())
             PagingSampleTheme {
                 ItemList(viewModel)
             }
@@ -85,9 +84,9 @@ fun ItemList(viewModel: MyViewModel) {
             }
         }
 
-        // TODO 12: outside of the lazy column scope, provide UI representation for initial state (first page)
+        // TODO 12: outside of the lazy column block, provide UI representation for initial state (first page)
 
-        // loading for the first time
+        // loading the first page
         if (lazyPagingItems.loadState.refresh is LoadState.Loading) {
             Box(
                 modifier = Modifier
@@ -98,7 +97,7 @@ fun ItemList(viewModel: MyViewModel) {
             }
         }
 
-        // error while fetching data for the first time
+        // error while fetching first page's data
         else if (lazyPagingItems.loadState.refresh is LoadState.Error) {
             Box(
                 modifier = Modifier
